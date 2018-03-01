@@ -44,7 +44,6 @@ public class OtherBuildingBar : MonoBehaviour {
     private void StartBuilding()
     {
         float ProcessByCycle = _totalValue / _time * _cycle;
-        float HealthByCycle = _totalHealth / _time * _cycle;
         Processing(ProcessByCycle);
         if (_currentValue <= 0)
         {

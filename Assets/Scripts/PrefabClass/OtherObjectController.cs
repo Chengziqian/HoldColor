@@ -8,7 +8,9 @@ public class OtherObjectController : MonoBehaviour {
     {
         Player,
         Hinge,
-        Field
+        Field,
+        Reserve,
+        Turret
     }
     public Type type;
     public GameObject Info;
@@ -55,6 +57,30 @@ public class OtherObjectController : MonoBehaviour {
                 gameObject.GetComponentInChildren<OtherBuildingBar>().Fill.color = Camp;
                 gameObject.GetComponentInChildren<OtherBuildingBar>().TotalHealth = _health;
                 gameObject.GetComponentInChildren<OtherBuildingBar>().BuildTime = Field._BuildingTime;
+                break;
+            case Type.Reserve:
+                _health = ReserveConfig._TotalHealth;
+                _energy = ReserveConfig._TotalEnergy;
+                statebar.TotalHealth = _health;
+                statebar.TotalEnergy = _energy;
+                statebar.CurrentEnergy = 0;
+                statebar.CurrentHealth = 0;
+                gameObject.GetComponent<SpriteRenderer>().color = CampDefine.Campless;
+                gameObject.GetComponentInChildren<OtherBuildingBar>().Fill.color = Camp;
+                gameObject.GetComponentInChildren<OtherBuildingBar>().TotalHealth = _health;
+                gameObject.GetComponentInChildren<OtherBuildingBar>().BuildTime = ReserveConfig._BuildingTime;
+                break;
+            case Type.Turret:
+                _health = TurretConfig._TotalHealth;
+                _energy = TurretConfig._TotalEnergy;
+                statebar.TotalHealth = _health;
+                statebar.TotalEnergy = _energy;
+                statebar.CurrentEnergy = 0;
+                statebar.CurrentHealth = 0;
+                gameObject.GetComponent<SpriteRenderer>().color = CampDefine.Campless;
+                gameObject.GetComponentInChildren<OtherBuildingBar>().Fill.color = Camp;
+                gameObject.GetComponentInChildren<OtherBuildingBar>().TotalHealth = _health;
+                gameObject.GetComponentInChildren<OtherBuildingBar>().BuildTime = TurretConfig._BuildingTime;
                 break;
         }
         Collector.KeyValuePair Pair = new Collector.KeyValuePair

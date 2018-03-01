@@ -113,10 +113,10 @@ public class WebSocketController : MonoBehaviour {
             case "BuildMessage":
                 Debug.Log("BuildMessage: " + data);
                 JsonUtility.FromJsonOverwrite(MessageBase.Message, BuildMessage);
+                MessageBox.Position P = JsonUtility.FromJson<MessageBox.Position>(BuildMessage.Position);
                 switch (BuildMessage.Type)
                 {
                     case "Field":
-                        MessageBox.Position P = JsonUtility.FromJson<MessageBox.Position>(BuildMessage.Position);
                         GameObject Field = Resources.Load<GameObject>("Prefabs/Field");
                         GameObject field = Instantiate(Field, new Vector3 (P.x, P.y, 0), new Quaternion());
                         field.GetComponent<FieldController>().id = BuildMessage.id;
@@ -127,23 +127,67 @@ public class WebSocketController : MonoBehaviour {
                             value = field
                         });
                         break;
+                    case "Reserve":
+                        GameObject Reserve = Resources.Load<GameObject>("Prefabs/Reserve");
+                        GameObject reserve = Instantiate(Reserve, new Vector3(P.x, P.y, 0), new Quaternion());
+                        reserve.GetComponent<FieldController>().id = BuildMessage.id;
+                        reserve.GetComponentInChildren<StateBar>().id = BuildMessage.id;
+                        Collector.Others.Add(new Collector.KeyValuePair
+                        {
+                            key = BuildMessage.id,
+                            value = reserve
+                        });
+                        break;
+                    case "Turret":
+                        GameObject Turret = Resources.Load<GameObject>("Prefabs/Turret");
+                        GameObject turret = Instantiate(Turret, new Vector3(P.x, P.y, 0), new Quaternion());
+                        turret.GetComponent<FieldController>().id = BuildMessage.id;
+                        turret.GetComponentInChildren<StateBar>().id = BuildMessage.id;
+                        Collector.Others.Add(new Collector.KeyValuePair
+                        {
+                            key = BuildMessage.id,
+                            value = turret
+                        });
+                        break;
                 }
                 break;
             case "OtherBuildMessage":
                 Debug.Log("OtherBuildMessage: " + data);
                 JsonUtility.FromJsonOverwrite(MessageBase.Message, BuildMessage);
+                MessageBox.Position PP = JsonUtility.FromJson<MessageBox.Position>(BuildMessage.Position);
                 switch (BuildMessage.Type)
                 {
                     case "Field":
-                        MessageBox.Position P = JsonUtility.FromJson<MessageBox.Position>(BuildMessage.Position);
                         GameObject Field = Resources.Load<GameObject>("Prefabs/OtherField");
-                        GameObject field = Instantiate(Field, new Vector3(P.x, P.y, 0), new Quaternion());
+                        GameObject field = Instantiate(Field, new Vector3(PP.x, PP.y, 0), new Quaternion());
                         field.GetComponent<OtherObjectController>().id = BuildMessage.id;
                         field.GetComponent<OtherObjectController>().SendMessage("Init", Initialize.GetOtherCamp(BuildMessage.Camp));
                         Collector.Others.Add(new Collector.KeyValuePair
                         {
                             key = BuildMessage.id,
                             value = field
+                        });
+                        break;
+                    case "Reserve":
+                        GameObject Reserve = Resources.Load<GameObject>("Prefabs/OtherReserve");
+                        GameObject reserve = Instantiate(Reserve, new Vector3(PP.x, PP.y, 0), new Quaternion());
+                        reserve.GetComponent<OtherObjectController>().id = BuildMessage.id;
+                        reserve.GetComponent<OtherObjectController>().SendMessage("Init", Initialize.GetOtherCamp(BuildMessage.Camp));
+                        Collector.Others.Add(new Collector.KeyValuePair
+                        {
+                            key = BuildMessage.id,
+                            value = reserve
+                        });
+                        break;
+                    case "Turret":
+                        GameObject Turret = Resources.Load<GameObject>("Prefabs/OtherTurret");
+                        GameObject turret = Instantiate(Turret, new Vector3(PP.x, PP.y, 0), new Quaternion());
+                        turret.GetComponent<OtherObjectController>().id = BuildMessage.id;
+                        turret.GetComponent<OtherObjectController>().SendMessage("Init", Initialize.GetOtherCamp(BuildMessage.Camp));
+                        Collector.Others.Add(new Collector.KeyValuePair
+                        {
+                            key = BuildMessage.id,
+                            value = turret
                         });
                         break;
                 }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using HoldColor.Config;
 
 public class TurretBuildTipController : MonoBehaviour {
+    private WebSocketController WS;
     private float Radius;
     private bool isBuildAbled;
     public bool IsBuildAbled
@@ -29,7 +30,8 @@ public class TurretBuildTipController : MonoBehaviour {
         FinalBuildAbled = true;
         isBuildAbled = false;
         TurretUIBTN = GameObject.Find("UI/BuildTurret");
-	}
+        WS = GameObject.Find("WebSocketController").GetComponent<WebSocketController>();
+    }
     private void Update()
     {
         Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -48,8 +50,24 @@ public class TurretBuildTipController : MonoBehaviour {
         {
             if (FinalBuildAbled && isBuildAbled)
             {
-                GameObject Turret = Resources.Load<GameObject>("Prefabs/Turret");
-                Instantiate(Turret, transform.position, transform.rotation);
+                //GameObject Turret = Resources.Load<GameObject>("Prefabs/Turret");
+                //Instantiate(Turret, transform.position, transform.rotation);
+
+                WS.Send(JsonUtility.ToJson(new MessageBox.MessageBase
+                {
+                    Type = "BuildMessage",
+                    Message = JsonUtility.ToJson(new MessageBox.BuildMessage
+                    {
+                        Type = "Turret",
+                        id = null,
+                        Position = JsonUtility.ToJson(new MessageBox.Position
+                        {
+                            x = transform.position.x,
+                            y = transform.position.y
+                        })
+                    })
+                }));
+
                 TurretUIBTN.GetComponent<Button>().interactable = true;
                 Destroy(this.gameObject);
             }
